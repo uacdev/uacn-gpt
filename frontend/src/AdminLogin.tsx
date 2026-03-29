@@ -209,7 +209,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
       });
       setVerificationSuccess(true);
       setVerificationOTP("");
-      
+
       setTimeout(() => {
         setShowVerification(false);
         setVerificationSuccess(false);
@@ -248,300 +248,301 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
       <div className={styles.loginContainer}>
         <div className={styles.mainWrapper}>
           <div className={styles.avatarSection}>
-            <video 
-              src="/UAC AI AVATAR.mp4" 
+            <video
+              src="/UAC AI AVATAR.mp4"
               className={styles.avatarLargeImage}
               autoPlay
               loop
               muted
               playsInline
-              type="video/mp4"
             />
           </div>
           <div className={styles.formWrapper}>
-            <div className={styles.logoWrapper}>
-              <img src="/logo.png" alt="UACN Logo" className={styles.logoTop} />
-            </div>
+            {!isRegistering && (
+              <div className={styles.logoWrapper}>
+                <img src="/logo.png" alt="UACN Logo" className={styles.logoTop} />
+              </div>
+            )}
             <div className={styles.card}>
               <p className={styles.subheading}>
                 {isForgotPassword
                   ? "Enter your email address and we'll send you a link to reset your password"
                   : isRegistering
-                  ? ""
-                  : "Sign in to manage UACN documents and knowledge base"}
+                    ? ""
+                    : "Sign in to manage UACN documents and knowledge base"}
               </p>
 
-          <form 
-            onSubmit={isForgotPassword ? handleForgotPasswordSubmit : handleAuthSubmit} 
-            className={styles.form}
-          >
-            {error && <div className={styles.errorMessage}>{error}</div>}
-            {successMessage && (
-              <div className={styles.successMessage}>{successMessage}</div>
-            )}
+              <form
+                onSubmit={isForgotPassword ? handleForgotPasswordSubmit : handleAuthSubmit}
+                className={styles.form}
+              >
+                {error && <div className={styles.errorMessage}>{error}</div>}
+                {successMessage && (
+                  <div className={styles.successMessage}>{successMessage}</div>
+                )}
 
-            {isForgotPassword ? (
-              <div className={styles.inputGroup}>
-                <label className={styles.label}>Email Address</label>
-                <input
-                  type="email"
-                  className={styles.input}
-                  placeholder="admin@uacn.com"
-                  value={forgotPasswordEmail}
-                  onChange={(e) => setForgotPasswordEmail(e.target.value)}
-                  required
-                />
-              </div>
-            ) : (
-              <>
-                {isRegistering && (
+                {isForgotPassword ? (
+                  <div className={styles.inputGroup}>
+                    <label className={styles.label}>Email Address</label>
+                    <input
+                      type="email"
+                      className={styles.input}
+                      placeholder="admin@uacn.com"
+                      value={forgotPasswordEmail}
+                      onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                ) : (
                   <>
+                    {isRegistering && (
+                      <>
+                        <div className={styles.inputGroup}>
+                          <label className={styles.label}>Full Name</label>
+                          <input
+                            type="text"
+                            name="fullName"
+                            className={styles.input}
+                            placeholder="John Doe"
+                            value={authForm.fullName || ""}
+                            onChange={handleAuthChange}
+                            required={isRegistering}
+                          />
+                        </div>
+
+                        <div className={styles.inputGroup}>
+                          <label className={styles.label}>Business Unit</label>
+                          <select
+                            name="businessUnit"
+                            className={styles.input}
+                            value={authForm.businessUnit || ""}
+                            onChange={handleAuthChange}
+                            required={isRegistering}
+                          >
+                            <option value="">Select a Business Unit</option>
+                            {businessUnits.map((bu) => (
+                              <option key={bu.value} value={bu.value}>
+                                {bu.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </>
+                    )}
+
                     <div className={styles.inputGroup}>
-                      <label className={styles.label}>Full Name</label>
+                      <label className={styles.label}>Email Address</label>
                       <input
-                        type="text"
-                        name="fullName"
+                        type="email"
+                        name="email"
                         className={styles.input}
-                        placeholder="John Doe"
-                        value={authForm.fullName || ""}
+                        placeholder="admin@uacn.com"
+                        value={authForm.email}
                         onChange={handleAuthChange}
-                        required={isRegistering}
+                        autoComplete="email"
+                        required
                       />
                     </div>
 
                     <div className={styles.inputGroup}>
-                      <label className={styles.label}>Business Unit</label>
-                      <select
-                        name="businessUnit"
-                        className={styles.input}
-                        value={authForm.businessUnit || ""}
-                        onChange={handleAuthChange}
-                        required={isRegistering}
-                      >
-                        <option value="">Select a Business Unit</option>
-                        {businessUnits.map((bu) => (
-                          <option key={bu.value} value={bu.value}>
-                            {bu.label}
-                          </option>
-                        ))}
-                      </select>
+                      <label className={styles.label}>Password</label>
+                      <div className={styles.passwordWrapper}>
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          name="password"
+                          className={styles.input}
+                          placeholder="••••••••"
+                          value={authForm.password}
+                          onChange={handleAuthChange}
+                          autoComplete="current-password"
+                          required
+                        />
+                        <button
+                          type="button"
+                          className={styles.togglePasswordBtn}
+                          onClick={() => setShowPassword(!showPassword)}
+                          title={showPassword ? "Hide password" : "Show password"}
+                        >
+                          {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                        </button>
+                      </div>
                     </div>
                   </>
                 )}
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    className={styles.input}
-                    placeholder="admin@uacn.com"
-                    value={authForm.email}
-                    onChange={handleAuthChange}
-                    autoComplete="email"
-                    required
-                  />
-                </div>
+                <button
+                  type="submit"
+                  className={styles.button}
+                  disabled={loading}
+                >
+                  {loading
+                    ? isForgotPassword
+                      ? "Sending..."
+                      : isRegistering
+                        ? "Creating Account..."
+                        : "Signing In..."
+                    : isForgotPassword
+                      ? "Send Reset Link"
+                      : isRegistering
+                        ? "Create Admin Account"
+                        : "Sign In"}
+                </button>
+              </form>
 
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Password</label>
-                  <div className={styles.passwordWrapper}>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      className={styles.input}
-                      placeholder="••••••••"
-                      value={authForm.password}
-                      onChange={handleAuthChange}
-                      autoComplete="current-password"
-                      required
-                    />
+              <div className={styles.toggleWrapper}>
+                {isForgotPassword ? (
+                  <span className={styles.toggleText}>
+                    Remember your password?
                     <button
                       type="button"
-                      className={styles.togglePasswordBtn}
-                      onClick={() => setShowPassword(!showPassword)}
-                      title={showPassword ? "Hide password" : "Show password"}
+                      className={styles.toggleButton}
+                      onClick={handleBackToLogin}
                     >
-                      {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                      Back to Sign In
                     </button>
-                  </div>
+                  </span>
+                ) : (
+                  <>
+                    <span className={styles.toggleText}>
+                      {isRegistering
+                        ? "Already have an account?"
+                        : "Don't have an account?"}
+                      <button
+                        type="button"
+                        className={styles.toggleButton}
+                        onClick={toggleMode}
+                      >
+                        {isRegistering ? "Sign In" : "Register"}
+                      </button>
+                    </span>
+
+                    {!isRegistering && (
+                      <button
+                        type="button"
+                        className={styles.forgotPasswordLink}
+                        onClick={handleForgotPasswordClick}
+                      >
+                        Forgot Password?
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {showConfirmation && (
+          <div className={styles.confirmationModalOverlay} onClick={() => !confirmationLoading && setShowConfirmation(false)}>
+            <div className={styles.confirmationModal} onClick={(e) => e.stopPropagation()}>
+              <h2 className={styles.confirmationTitle}>Confirm Your Information</h2>
+              <p className={styles.confirmationSubtitle}>Please verify that your information is correct before proceeding</p>
+
+              <div className={styles.confirmationDetails}>
+                <div className={styles.confirmationField}>
+                  <label className={styles.confirmationLabel}>Full Name</label>
+                  <p className={styles.confirmationValue}>{authForm.fullName}</p>
                 </div>
-              </>
-            )}
+                <div className={styles.confirmationField}>
+                  <label className={styles.confirmationLabel}>Business Unit</label>
+                  <p className={styles.confirmationValue}>
+                    {businessUnits.find(bu => bu.value === authForm.businessUnit)?.label || authForm.businessUnit}
+                  </p>
+                </div>
+                <div className={styles.confirmationField}>
+                  <label className={styles.confirmationLabel}>Email</label>
+                  <p className={styles.confirmationValue}>{authForm.email}</p>
+                </div>
+              </div>
 
-            <button
-              type="submit"
-              className={styles.button}
-              disabled={loading}
-            >
-              {loading
-                ? isForgotPassword
-                  ? "Sending..."
-                  : isRegistering
-                  ? "Creating Account..."
-                  : "Signing In..."
-                : isForgotPassword
-                ? "Send Reset Link"
-                : isRegistering
-                ? "Create Admin Account"
-                : "Sign In"}
-            </button>
-          </form>
+              {error && <div className={styles.confirmationError}>{error}</div>}
 
-          <div className={styles.toggleWrapper}>
-            {isForgotPassword ? (
-              <span className={styles.toggleText}>
-                Remember your password?
+              <div className={styles.confirmationActions}>
                 <button
                   type="button"
-                  className={styles.toggleButton}
-                  onClick={handleBackToLogin}
+                  className={styles.confirmationEditBtn}
+                  onClick={handleEditSignUp}
+                  disabled={confirmationLoading}
                 >
-                  Back to Sign In
+                  Edit
                 </button>
-              </span>
-            ) : (
-              <>
-                <span className={styles.toggleText}>
-                  {isRegistering
-                    ? "Already have an account?"
-                    : "Don't have an account?"}
-                  <button
-                    type="button"
-                    className={styles.toggleButton}
-                    onClick={toggleMode}
-                  >
-                    {isRegistering ? "Sign In" : "Register"}
-                  </button>
-                </span>
-                
-                {!isRegistering && (
-                  <button
-                    type="button"
-                    className={styles.forgotPasswordLink}
-                    onClick={handleForgotPasswordClick}
-                  >
-                    Forgot Password?
-                  </button>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-      </div>
-
-      {showConfirmation && (
-        <div className={styles.confirmationModalOverlay} onClick={() => !confirmationLoading && setShowConfirmation(false)}>
-          <div className={styles.confirmationModal} onClick={(e) => e.stopPropagation()}>
-            <h2 className={styles.confirmationTitle}>Confirm Your Information</h2>
-            <p className={styles.confirmationSubtitle}>Please verify that your information is correct before proceeding</p>
-            
-            <div className={styles.confirmationDetails}>
-              <div className={styles.confirmationField}>
-                <label className={styles.confirmationLabel}>Full Name</label>
-                <p className={styles.confirmationValue}>{authForm.fullName}</p>
-              </div>
-              <div className={styles.confirmationField}>
-                <label className={styles.confirmationLabel}>Business Unit</label>
-                <p className={styles.confirmationValue}>
-                  {businessUnits.find(bu => bu.value === authForm.businessUnit)?.label || authForm.businessUnit}
-                </p>
-              </div>
-              <div className={styles.confirmationField}>
-                <label className={styles.confirmationLabel}>Email</label>
-                <p className={styles.confirmationValue}>{authForm.email}</p>
-              </div>
-            </div>
-
-            {error && <div className={styles.confirmationError}>{error}</div>}
-
-            <div className={styles.confirmationActions}>
-              <button
-                type="button"
-                className={styles.confirmationEditBtn}
-                onClick={handleEditSignUp}
-                disabled={confirmationLoading}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className={styles.confirmationProceedBtn}
-                onClick={handleConfirmSignUp}
-                disabled={confirmationLoading}
-              >
-                {confirmationLoading ? "Processing..." : "Proceed"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showVerification && (
-        <div className={styles.verificationModalOverlay} onClick={() => !verificationLoading && setShowVerification(false)}>
-          <div className={styles.verificationModal} onClick={(e) => e.stopPropagation()}>
-            {verificationSuccess ? (
-              <div className={styles.verificationSuccess}>
-                <div className={styles.successIcon}>
-                  <FiCheckCircle size={48} />
-                </div>
-                <h2 className={styles.successTitle}>Email Verified!</h2>
-                <p className={styles.successMessage}>
-                  Your email has been verified successfully. Redirecting...
-                </p>
-              </div>
-            ) : (
-              <>
                 <button
-                  className={styles.verificationClose}
-                  onClick={() => setShowVerification(false)}
-                  disabled={verificationLoading}
+                  type="button"
+                  className={styles.confirmationProceedBtn}
+                  onClick={handleConfirmSignUp}
+                  disabled={confirmationLoading}
                 >
-                  ✕
+                  {confirmationLoading ? "Processing..." : "Proceed"}
                 </button>
-                <h2 className={styles.verificationTitle}>Verify Your Email</h2>
-                <p className={styles.verificationSubtitle}>
-                  Enter the 6-digit verification code sent to <strong>{verificationEmail}</strong>
-                </p>
-                
-                <form onSubmit={handleVerifyEmail} className={styles.verificationForm}>
-                  <input
-                    type="text"
-                    placeholder="000000"
-                    maxLength={6}
-                    value={verificationOTP}
-                    onChange={(e) => setVerificationOTP(e.target.value.replace(/\D/g, ''))}
-                    required
-                    disabled={verificationLoading}
-                    autoComplete="off"
-                    inputMode="numeric"
-                    className={styles.otpInput}
-                  />
-                  {verificationError && <div className={styles.verificationErrorMsg}>{verificationError}</div>}
-                  <button type="submit" disabled={verificationLoading} className={styles.verificationBtn}>
-                    {verificationLoading ? "Verifying..." : "Verify"}
-                  </button>
-                </form>
+              </div>
+            </div>
+          </div>
+        )}
 
-                <div className={styles.verificationFooter}>
-                  <p className={styles.resendText}>Didn't receive a code?</p>
+        {showVerification && (
+          <div className={styles.verificationModalOverlay} onClick={() => !verificationLoading && setShowVerification(false)}>
+            <div className={styles.verificationModal} onClick={(e) => e.stopPropagation()}>
+              {verificationSuccess ? (
+                <div className={styles.verificationSuccess}>
+                  <div className={styles.successIcon}>
+                    <FiCheckCircle size={48} />
+                  </div>
+                  <h2 className={styles.successTitle}>Email Verified!</h2>
+                  <p className={styles.successMessage}>
+                    Your email has been verified successfully. Redirecting...
+                  </p>
+                </div>
+              ) : (
+                <>
                   <button
-                    type="button"
-                    className={styles.resendBtn}
-                    onClick={handleResendOTP}
+                    className={styles.verificationClose}
+                    onClick={() => setShowVerification(false)}
                     disabled={verificationLoading}
                   >
-                    Resend OTP
+                    ✕
                   </button>
-                </div>
-              </>
-            )}
+                  <h2 className={styles.verificationTitle}>Verify Your Email</h2>
+                  <p className={styles.verificationSubtitle}>
+                    Enter the 6-digit verification code sent to <strong>{verificationEmail}</strong>
+                  </p>
+
+                  <form onSubmit={handleVerifyEmail} className={styles.verificationForm}>
+                    <input
+                      type="text"
+                      placeholder="000000"
+                      maxLength={6}
+                      value={verificationOTP}
+                      onChange={(e) => setVerificationOTP(e.target.value.replace(/\D/g, ''))}
+                      required
+                      disabled={verificationLoading}
+                      autoComplete="off"
+                      inputMode="numeric"
+                      className={styles.otpInput}
+                    />
+                    {verificationError && <div className={styles.verificationErrorMsg}>{verificationError}</div>}
+                    <button type="submit" disabled={verificationLoading} className={styles.verificationBtn}>
+                      {verificationLoading ? "Verifying..." : "Verify"}
+                    </button>
+                  </form>
+
+                  <div className={styles.verificationFooter}>
+                    <p className={styles.resendText}>Didn't receive a code?</p>
+                    <button
+                      type="button"
+                      className={styles.resendBtn}
+                      onClick={handleResendOTP}
+                      disabled={verificationLoading}
+                    >
+                      Resend OTP
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-    <PrivacyPolicyFooter type="admin" />
+        )}
+      </div>
+      <PrivacyPolicyFooter type="admin" />
     </>
   );
 };

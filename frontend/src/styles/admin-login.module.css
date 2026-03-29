@@ -172,7 +172,7 @@
 
 .logoTop {
   width: 90px;
-  height: auto;
+  height: 90px;
   object-fit: contain;
   display: block;
   animation: logoFadeIn 0.8s ease-out;
@@ -181,11 +181,9 @@
 @keyframes logoFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

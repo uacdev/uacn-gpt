@@ -163,7 +163,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       await axios.post(`${base}/forgot-password`, { email: forgotEmail });
       setForgotSuccess(true);
       setForgotEmail("");
-      
+
       setTimeout(() => {
         setForgotSuccess(false);
         setShowForgotPassword(false);
@@ -188,7 +188,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       });
       setVerificationSuccess(true);
       setVerificationOTP("");
-      
+
       setTimeout(() => {
         setShowVerification(false);
         setVerificationSuccess(false);
@@ -226,309 +226,310 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   return (
     <>
       <div className="login-container">
-      {success ? (
-        <div className="success-card">
-          <div className="success-icon">
-            <FiCheckCircle size={48} />
-          </div>
-          <h2 className="success-title">Account Created Successfully!</h2>
-          <p className="success-message">
-            Your account has been created. Redirecting to login page in 3 seconds...
-          </p>
-        </div>
-      ) : (
-        <>
-          {isAdminView && (
-            <div className="logo-section">
-              <img src="/logo.png" alt="UACN Logo" className="brand-logo-above" />
+        {success ? (
+          <div className="success-card">
+            <div className="success-icon">
+              <FiCheckCircle size={48} />
             </div>
-          )}
-          <div className="login-wrapper">
-            {!isAdminView && (
-              <div className="avatar-image-section">
-                <video 
-                  src="/UAC AI AVATAR.mp4" 
-                  className="avatar-large-image"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  type="video/mp4"
-                />
+            <h2 className="success-title">Account Created Successfully!</h2>
+            <p className="success-message">
+              Your account has been created. Redirecting to login page in 3 seconds...
+            </p>
+          </div>
+        ) : (
+          <>
+            {isAdminView && (
+              <div className="logo-section">
+                <img src="/logo.png" alt="UACN Logo" className="brand-logo-above" />
               </div>
             )}
-            <div className={`login-card ${isLogin && !isAdminView ? 'login-card-with-avatar' : ''} ${!isLogin && !isAdminView ? 'login-card-with-avatar' : ''}`}>
-            <div className="login-logo-wrapper">
-              <img src="/logo.png" alt="UACN Logo" className="login-logo-top" />
-            </div>
-            <div className="login-card-header">
-              <h2>{isAdminView ? (isLogin ? "Admin Sign In" : "Create Admin Account") : (isLogin ? "Welcome Back" : "Create Account")}</h2>
-              <p className="login-subtitle">{isLogin ? "Sign in to your account" : "Create a new UACN GPT account"}</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="login-form">
-              {!isLogin && (
-                <>
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required={!isLogin}
+            <div className="login-wrapper">
+              {!isAdminView && (
+                <div className="avatar-image-section">
+                  <video
+                    src="/UAC AI AVATAR.mp4"
+                    className="avatar-large-image"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
                   />
-                  <select
-                    value={businessUnit || ""}
-                    onChange={(e) => setBusinessUnit(e.target.value as BusinessUnit)}
-                    required={!isLogin}
-                  >
-                    <option value="">Select a Business Unit</option>
-                    {businessUnits.map((bu) => (
-                      <option key={bu.value} value={bu.value}>
-                        {bu.label}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              )}
-
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
-                required
-              />
-
-              <div className="password-wrapper">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                />
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
-                >
-                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-                </button>
-              </div>
-
-              {isLogin && (
-                <button
-                  type="button"
-                  className="forgot-password-link"
-                  onClick={() => setShowForgotPassword(true)}
-                >
-                  Forgot Password?
-                </button>
-              )}
-
-              {error && <div className="login-error">{error}</div>}
-
-              <button type="submit" disabled={loading} className="login-btn">
-                {loading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
-              </button>
-            </form>
-
-            <div className="login-toggle">
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setError("");
-                }}
-                className="toggle-link"
-              >
-                {isLogin ? "Sign up" : "Sign in"}
-              </button>
-            </div>
-
-            <div className="privacy-policy-link-container">
-              <button
-                type="button"
-                onClick={() => setShowPolicy(true)}
-                className="privacy-policy-login-link"
-              >
-                Privacy Policy
-              </button>
-            </div>
-          </div>
-          </div>
-        </>
-      )}
-
-      {showForgotPassword && (
-        <div className="forgot-password-modal-overlay" onClick={() => !forgotSuccess && setShowForgotPassword(false)}>
-          <div className="forgot-password-modal" onClick={(e) => e.stopPropagation()}>
-            {forgotSuccess ? (
-              <div className="forgot-password-success">
-                <div className="success-icon">
-                  <FiCheckCircle size={48} />
                 </div>
-                <h2 className="success-title">Check Your Email</h2>
-                <p className="success-message">
-                  We've sent a password reset link to <strong>{forgotEmail}</strong>. 
-                  The link will expire in 1 hour.
-                </p>
-                <button
-                  className="forgot-password-close-btn"
-                  onClick={() => {
-                    setShowForgotPassword(false);
-                    setForgotSuccess(false);
-                  }}
-                >
-                  Got it
-                </button>
-              </div>
-            ) : (
-              <>
-                <button
-                  className="forgot-password-close"
-                  onClick={() => setShowForgotPassword(false)}
-                >
-                  <FiX size={24} />
-                </button>
-                <h2>Reset Your Password</h2>
-                <p className="forgot-subtitle">Enter the email address associated with your account</p>
-                
-                <form onSubmit={handleForgotPassword} className="forgot-form">
+              )}
+              <div className={`login-card ${isLogin && !isAdminView ? 'login-card-with-avatar' : ''} ${!isLogin && !isAdminView ? 'login-card-with-avatar' : ''}`}>
+                {isLogin && (
+                  <div className="login-logo-wrapper">
+                    <img src="/logo.png" alt="UACN Logo" className="login-logo-top" />
+                  </div>
+                )}
+                <div className="login-card-header">
+                  <h2>{isAdminView ? (isLogin ? "Admin Sign In" : "Create Admin Account") : (isLogin ? "Welcome Back" : "Create Account")}</h2>
+                  <p className="login-subtitle">{isLogin ? "Sign in to your account" : "Create a new UACN GPT account"}</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="login-form">
+                  {!isLogin && (
+                    <>
+                      <input
+                        type="text"
+                        placeholder="Full Name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required={!isLogin}
+                      />
+                      <select
+                        value={businessUnit || ""}
+                        onChange={(e) => setBusinessUnit(e.target.value as BusinessUnit)}
+                        required={!isLogin}
+                      >
+                        <option value="">Select a Business Unit</option>
+                        {businessUnits.map((bu) => (
+                          <option key={bu.value} value={bu.value}>
+                            {bu.label}
+                          </option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+
                   <input
                     type="email"
-                    placeholder="Email address"
-                    value={forgotEmail}
-                    onChange={(e) => setForgotEmail(e.target.value)}
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
                     required
-                    disabled={forgotLoading}
                   />
-                  {forgotError && <div className="forgot-error">{forgotError}</div>}
-                  <button type="submit" disabled={forgotLoading} className="forgot-btn">
-                    {forgotLoading ? "Sending..." : "Send Reset Link"}
-                  </button>
-                </form>
-              </>
-            )}
-          </div>
-        </div>
-      )}
 
-      {showConfirmation && (
-        <div className="confirmation-modal-overlay" onClick={() => !confirmationLoading && setShowConfirmation(false)}>
-          <div className="confirmation-modal" onClick={(e) => e.stopPropagation()}>
-            <h2>Confirm Your Information</h2>
-            <p className="confirmation-subtitle">Please verify that your information is correct before proceeding</p>
-            
-            <div className="confirmation-details">
-              <div className="confirmation-field">
-                <label>Full Name</label>
-                <p>{fullName}</p>
-              </div>
-              <div className="confirmation-field">
-                <label>Business Unit</label>
-                <p>{businessUnits.find(bu => bu.value === businessUnit)?.label || businessUnit}</p>
-              </div>
-              <div className="confirmation-field">
-                <label>Email</label>
-                <p>{email}</p>
-              </div>
-            </div>
+                  <div className="password-wrapper">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      autoComplete="current-password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle"
+                      onClick={() => setShowPassword(!showPassword)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    </button>
+                  </div>
 
-            {error && <div className="confirmation-error">{error}</div>}
+                  {isLogin && (
+                    <button
+                      type="button"
+                      className="forgot-password-link"
+                      onClick={() => setShowForgotPassword(true)}
+                    >
+                      Forgot Password?
+                    </button>
+                  )}
 
-            <div className="confirmation-actions">
-              <button
-                type="button"
-                className="confirmation-edit-btn"
-                onClick={handleEditSignUp}
-                disabled={confirmationLoading}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className="confirmation-proceed-btn"
-                onClick={handleConfirmSignUp}
-                disabled={confirmationLoading}
-              >
-                {confirmationLoading ? "Processing..." : "Proceed"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+                  {error && <div className="login-error">{error}</div>}
 
-      {showVerification && (
-        <div className="verification-modal-overlay" onClick={() => !verificationLoading && setShowVerification(false)}>
-          <div className="verification-modal" onClick={(e) => e.stopPropagation()}>
-            {verificationSuccess ? (
-              <div className="verification-success">
-                <div className="success-icon">
-                  <FiCheckCircle size={48} />
-                </div>
-                <h2 className="success-title">Email Verified!</h2>
-                <p className="success-message">
-                  Your email has been verified successfully. Redirecting to login...
-                </p>
-              </div>
-            ) : (
-              <>
-                <button
-                  className="verification-close"
-                  onClick={() => setShowVerification(false)}
-                  disabled={verificationLoading}
-                >
-                  <FiX size={24} />
-                </button>
-                <h2>Verify Your Email</h2>
-                <p className="verification-subtitle">Enter the 6-digit verification code sent to <strong>{verificationEmail}</strong></p>
-                
-                <form onSubmit={handleVerifyEmail} className="verification-form">
-                  <input
-                    type="text"
-                    placeholder="000000"
-                    maxLength={6}
-                    value={verificationOTP}
-                    onChange={(e) => setVerificationOTP(e.target.value.replace(/\D/g, ''))}
-                    required
-                    disabled={verificationLoading}
-                    autoComplete="off"
-                    inputMode="numeric"
-                    style={{ textAlign: "center", fontSize: "24px", letterSpacing: "8px", fontWeight: "bold" }}
-                  />
-                  {verificationError && <div className="verification-error">{verificationError}</div>}
-                  <button type="submit" disabled={verificationLoading} className="verification-btn">
-                    {verificationLoading ? "Verifying..." : "Verify"}
+                  <button type="submit" disabled={loading} className="login-btn">
+                    {loading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
                   </button>
                 </form>
 
-                <div className="verification-footer">
-                  <p className="resend-text">Didn't receive a code?</p>
+                <div className="login-toggle">
+                  {isLogin ? "Don't have an account? " : "Already have an account? "}
                   <button
                     type="button"
-                    className="resend-btn"
-                    onClick={handleResendOTP}
-                    disabled={verificationLoading}
+                    onClick={() => {
+                      setIsLogin(!isLogin);
+                      setError("");
+                    }}
+                    className="toggle-link"
                   >
-                    Resend OTP
+                    {isLogin ? "Sign up" : "Sign in"}
                   </button>
                 </div>
-              </>
-            )}
+
+                <div className="privacy-policy-link-container">
+                  <button
+                    type="button"
+                    onClick={() => setShowPolicy(true)}
+                    className="privacy-policy-login-link"
+                  >
+                    Privacy Policy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {showForgotPassword && (
+          <div className="forgot-password-modal-overlay" onClick={() => !forgotSuccess && setShowForgotPassword(false)}>
+            <div className="forgot-password-modal" onClick={(e) => e.stopPropagation()}>
+              {forgotSuccess ? (
+                <div className="forgot-password-success">
+                  <div className="success-icon">
+                    <FiCheckCircle size={48} />
+                  </div>
+                  <h2 className="success-title">Check Your Email</h2>
+                  <p className="success-message">
+                    We've sent a password reset link to <strong>{forgotEmail}</strong>.
+                    The link will expire in 1 hour.
+                  </p>
+                  <button
+                    className="forgot-password-close-btn"
+                    onClick={() => {
+                      setShowForgotPassword(false);
+                      setForgotSuccess(false);
+                    }}
+                  >
+                    Got it
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <button
+                    className="forgot-password-close"
+                    onClick={() => setShowForgotPassword(false)}
+                  >
+                    <FiX size={24} />
+                  </button>
+                  <h2>Reset Your Password</h2>
+                  <p className="forgot-subtitle">Enter the email address associated with your account</p>
+
+                  <form onSubmit={handleForgotPassword} className="forgot-form">
+                    <input
+                      type="email"
+                      placeholder="Email address"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      required
+                      disabled={forgotLoading}
+                    />
+                    {forgotError && <div className="forgot-error">{forgotError}</div>}
+                    <button type="submit" disabled={forgotLoading} className="forgot-btn">
+                      {forgotLoading ? "Sending..." : "Send Reset Link"}
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {showPolicy && (
-        <PrivacyPolicy isOpen={showPolicy} onClose={() => setShowPolicy(false)} type="user" />
-      )}
+        {showConfirmation && (
+          <div className="confirmation-modal-overlay" onClick={() => !confirmationLoading && setShowConfirmation(false)}>
+            <div className="confirmation-modal" onClick={(e) => e.stopPropagation()}>
+              <h2>Confirm Your Information</h2>
+              <p className="confirmation-subtitle">Please verify that your information is correct before proceeding</p>
 
-      <style>{`
+              <div className="confirmation-details">
+                <div className="confirmation-field">
+                  <label>Full Name</label>
+                  <p>{fullName}</p>
+                </div>
+                <div className="confirmation-field">
+                  <label>Business Unit</label>
+                  <p>{businessUnits.find(bu => bu.value === businessUnit)?.label || businessUnit}</p>
+                </div>
+                <div className="confirmation-field">
+                  <label>Email</label>
+                  <p>{email}</p>
+                </div>
+              </div>
+
+              {error && <div className="confirmation-error">{error}</div>}
+
+              <div className="confirmation-actions">
+                <button
+                  type="button"
+                  className="confirmation-edit-btn"
+                  onClick={handleEditSignUp}
+                  disabled={confirmationLoading}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="confirmation-proceed-btn"
+                  onClick={handleConfirmSignUp}
+                  disabled={confirmationLoading}
+                >
+                  {confirmationLoading ? "Processing..." : "Proceed"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showVerification && (
+          <div className="verification-modal-overlay" onClick={() => !verificationLoading && setShowVerification(false)}>
+            <div className="verification-modal" onClick={(e) => e.stopPropagation()}>
+              {verificationSuccess ? (
+                <div className="verification-success">
+                  <div className="success-icon">
+                    <FiCheckCircle size={48} />
+                  </div>
+                  <h2 className="success-title">Email Verified!</h2>
+                  <p className="success-message">
+                    Your email has been verified successfully. Redirecting to login...
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <button
+                    className="verification-close"
+                    onClick={() => setShowVerification(false)}
+                    disabled={verificationLoading}
+                  >
+                    <FiX size={24} />
+                  </button>
+                  <h2>Verify Your Email</h2>
+                  <p className="verification-subtitle">Enter the 6-digit verification code sent to <strong>{verificationEmail}</strong></p>
+
+                  <form onSubmit={handleVerifyEmail} className="verification-form">
+                    <input
+                      type="text"
+                      placeholder="000000"
+                      maxLength={6}
+                      value={verificationOTP}
+                      onChange={(e) => setVerificationOTP(e.target.value.replace(/\D/g, ''))}
+                      required
+                      disabled={verificationLoading}
+                      autoComplete="off"
+                      inputMode="numeric"
+                      style={{ textAlign: "center", fontSize: "24px", letterSpacing: "8px", fontWeight: "bold" }}
+                    />
+                    {verificationError && <div className="verification-error">{verificationError}</div>}
+                    <button type="submit" disabled={verificationLoading} className="verification-btn">
+                      {verificationLoading ? "Verifying..." : "Verify"}
+                    </button>
+                  </form>
+
+                  <div className="verification-footer">
+                    <p className="resend-text">Didn't receive a code?</p>
+                    <button
+                      type="button"
+                      className="resend-btn"
+                      onClick={handleResendOTP}
+                      disabled={verificationLoading}
+                    >
+                      Resend OTP
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {showPolicy && (
+          <PrivacyPolicy isOpen={showPolicy} onClose={() => setShowPolicy(false)} type="user" />
+        )}
+
+        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
 
         .avatar-glow-wrapper {
@@ -774,7 +775,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
         .login-logo-top {
           width: 90px;
-          height: auto;
+          height: 90px;
           object-fit: contain;
           display: block;
         }
@@ -782,11 +783,9 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         @keyframes loginLogoFadeIn {
           from {
             opacity: 0;
-            transform: translateY(-20px);
           }
           to {
             opacity: 1;
-            transform: translateY(0);
           }
         }
 

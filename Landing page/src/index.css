@@ -98,18 +98,23 @@
   }
 
   html {
+    width: 100%;
+    height: auto;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, sans-serif;
     width: 100%;
+    height: auto;
+    min-height: 100vh;
     overflow-x: hidden;
-    touch-action: pan-y;
-    -webkit-touch-callout: none;
+    overscroll-behavior: auto;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1, h2, h3, h4, h5, h6 {

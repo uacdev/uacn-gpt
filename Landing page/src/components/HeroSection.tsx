@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Brain, Shield, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.jpg";
-import heroAvatar from "@/assets/hero-avatar.png";
+import heroAvatar from "@/assets/avatar-1.png";
 
 const bullets = [
   { icon: Brain, text: "AI-powered answers from your internal knowledge base" },
@@ -11,9 +11,9 @@ const bullets = [
 ];
 
 const HeroSection = () => (
-  <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-visible">
+  <section className="relative w-full min-h-screen flex items-center justify-center pt-16 overflow-visible touch-auto">
     {/* Background */}
-    <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute inset-0 pointer-events-none select-none">
       <img src={heroBg} alt="" className="w-full h-full object-cover opacity-40" width={1920} height={1080} />
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
     </div>
@@ -23,7 +23,8 @@ const HeroSection = () => (
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.2, delay: 0.3 }}
-      className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
+      className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-visible select-none"
+      style={{ touchAction: 'none' }}
     >
       <img
         src={heroAvatar}
@@ -32,11 +33,12 @@ const HeroSection = () => (
         className="w-[280px] sm:w-[400px] md:w-[650px] lg:w-[750px] h-auto opacity-15 dark:opacity-10 animate-float select-none"
         width={1024}
         height={1024}
+        style={{ pointerEvents: 'none', touchAction: 'none' }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background pointer-events-none select-none" />
     </motion.div>
 
-    <div className="container relative z-10 mx-auto px-4 sm:px-6 py-20 md:py-32">
+    <div className="container relative z-10 mx-auto w-full px-4 sm:px-6 py-20 md:py-32 touch-auto">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
