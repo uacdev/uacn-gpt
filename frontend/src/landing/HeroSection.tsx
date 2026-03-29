@@ -12,7 +12,7 @@ const HeroSection = () => (
   <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
     {/* Background */}
     <div className="absolute inset-0">
-      <img src="/src/assets/hero-bg.jpg" alt="" className="w-full h-full object-cover opacity-40" width={1920} height={1080} />
+      <img src="/hero-bg.jpg" alt="" className="w-full h-full object-cover opacity-40" width={1920} height={1080} />
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
     </div>
 
@@ -24,7 +24,7 @@ const HeroSection = () => (
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
       <img
-        src="/src/assets/avatar-1.png"
+        src="/avatar-1.png"
         alt=""
         className="max-w-[300px] h-auto opacity-15 dark:opacity-10 animate-float select-none"
         width={1024}
