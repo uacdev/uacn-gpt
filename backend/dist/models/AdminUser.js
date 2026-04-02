@@ -40,7 +40,7 @@ const AdminUserSchema = new mongoose_1.Schema({
     fullName: { type: String, required: true },
     businessUnit: {
         type: String,
-        enum: ["GCL", "LSF", "CAP", "UFL", "CHI", "UAC-Restaurants", "UPDC", "SUPERADMIN"],
+        enum: ["GCL", "LSF", "CAP", "UFL", "CHI", "UAC-Restaurants", "UPDC", "UACN", "SUPERADMIN"],
         required: true
     },
     password: { type: String, required: true },

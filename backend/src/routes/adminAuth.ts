@@ -7,6 +7,7 @@ import { User } from "../models/User";
 import { BusinessUnit as BusinessUnitModel } from "../models/BusinessUnit";
 import { BusinessUnitEmailMapping } from "../models/BusinessUnitEmailMapping";
 import { sendVerificationEmail, sendPasswordResetEmail, sendWelcomeEmail } from "../services/emailService";
+import { getBusinessUnitConfig } from "../config/businessUnits";
 
 export const adminAuthRouter = express.Router();
 
@@ -54,26 +55,37 @@ adminAuthRouter.post("/register", async (req: Request<{}, {}, AdminAuthRequest>,
 
     // For C-Panel superadmin registration (no BU specified), use defaults
     const adminFullName = fullName || "Superadmin";
-    const adminBU = businessUnit || ("SUPERADMIN" as BusinessUnit);
+    
+    // Convert business unit from full name or identifier to standard abbreviation
+    let adminBU: BusinessUnit;
+    if (businessUnit && businessUnit !== "SUPERADMIN") {
+      const buConfig = getBusinessUnitConfig(businessUnit);
+      if (!buConfig) {
+        return res.status(400).json({ error: `Invalid business unit: ${businessUnit}` });
+      }
+      adminBU = buConfig.abbr as BusinessUnit;
+    } else {
+      adminBU = "SUPERADMIN" as BusinessUnit;
+    }
 
     // Validate business unit exists if specified (and not SUPERADMIN)
-    if (businessUnit && businessUnit !== "SUPERADMIN") {
-      const validBU = await BusinessUnitModel.findOne({ name: businessUnit });
+    if (adminBU && adminBU !== "SUPERADMIN") {
+      const validBU = await BusinessUnitModel.findOne({ name: adminBU });
       if (!validBU) {
         return res.status(400).json({ error: "Invalid business unit" });
       }
     }
 
     // Validate email domain matches business unit (only if BU is specified, not for superadmin)
-    if (businessUnit && businessUnit !== "SUPERADMIN") {
-      const emailDomainMapping = await BusinessUnitEmailMapping.findOne({ businessUnit });
+    if (adminBU && adminBU !== "SUPERADMIN") {
+      const emailDomainMapping = await BusinessUnitEmailMapping.findOne({ businessUnit: adminBU });
       if (emailDomainMapping) {
         const emailDomain = email.toLowerCase().split('@')[1];
         const expectedDomain = emailDomainMapping.emailDomain.toLowerCase();
         
         if (!emailDomain || emailDomain !== expectedDomain) {
           return res.status(400).json({ 
-            error: `Invalid email domain for ${businessUnit}. Your email must end with @${expectedDomain}` 
+            error: `Invalid email domain for ${adminBU}. Your email must end with @${expectedDomain}` 
           });
         }
       } else {
@@ -81,7 +93,7 @@ adminAuthRouter.post("/register", async (req: Request<{}, {}, AdminAuthRequest>,
         const anyMappingExists = await BusinessUnitEmailMapping.countDocuments();
         if (anyMappingExists > 0) {
           return res.status(400).json({
-            error: `Email domain mapping not configured for ${businessUnit}. Please contact your administrator to set up the email domain for this business unit.`
+            error: `Email domain mapping not configured for ${adminBU}. Please contact your administrator to set up the email domain for this business unit.`
           });
         }
       }

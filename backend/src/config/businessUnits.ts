@@ -63,7 +63,7 @@ export const BUSINESS_UNITS: Record<string, BusinessUnitConfig> = {
   },
   UACN: {
     abbr: "UACN",
-    fullName: "UACN Group",
+    fullName: "United Africa Company of Nigeria (UACN Group)",
     label: "UACN Group (UACN)",
     industry: "Holding Company",
     description: "UACN Group - umbrella organization for all business units"
@@ -92,7 +92,9 @@ export function getBusinessUnitConfig(
   // Try matching by full name (case-insensitive)
   const byFullName = Object.values(BUSINESS_UNITS).find(
     bu => bu.fullName.toLowerCase().includes(buIdentifier.toLowerCase()) ||
-          buIdentifier.toLowerCase().includes(bu.abbr.toLowerCase())
+          buIdentifier.toLowerCase().includes(bu.abbr.toLowerCase()) ||
+          // Handle "UAC of Nigeria" matching "UACN"
+          (buIdentifier.toLowerCase().includes("uac") && bu.abbr === "UACN")
   );
 
   return byFullName || null;

@@ -13,6 +13,7 @@ const User_1 = require("../models/User");
 const BusinessUnit_1 = require("../models/BusinessUnit");
 const BusinessUnitEmailMapping_1 = require("../models/BusinessUnitEmailMapping");
 const emailService_1 = require("../services/emailService");
+const businessUnits_1 = require("../config/businessUnits");
 exports.adminAuthRouter = express_1.default.Router();
 const JWT_SECRET = process.env.UACN_GPT_JWT_SECRET || "your-secret-key-change-in-production";
 // Helper function to generate 6-digit OTP
@@ -43,23 +44,34 @@ exports.adminAuthRouter.post("/register", async (req, res) => {
         const hashedPassword = await bcryptjs_1.default.hash(password, 10);
         // For C-Panel superadmin registration (no BU specified), use defaults
         const adminFullName = fullName || "Superadmin";
-        const adminBU = businessUnit || "SUPERADMIN";
-        // Validate business unit exists if specified (and not SUPERADMIN)
+        // Convert business unit from full name or identifier to standard abbreviation
+        let adminBU;
         if (businessUnit && businessUnit !== "SUPERADMIN") {
-            const validBU = await BusinessUnit_1.BusinessUnit.findOne({ name: businessUnit });
+            const buConfig = (0, businessUnits_1.getBusinessUnitConfig)(businessUnit);
+            if (!buConfig) {
+                return res.status(400).json({ error: `Invalid business unit: ${businessUnit}` });
+            }
+            adminBU = buConfig.abbr;
+        }
+        else {
+            adminBU = "SUPERADMIN";
+        }
+        // Validate business unit exists if specified (and not SUPERADMIN)
+        if (adminBU && adminBU !== "SUPERADMIN") {
+            const validBU = await BusinessUnit_1.BusinessUnit.findOne({ name: adminBU });
             if (!validBU) {
                 return res.status(400).json({ error: "Invalid business unit" });
             }
         }
         // Validate email domain matches business unit (only if BU is specified, not for superadmin)
-        if (businessUnit && businessUnit !== "SUPERADMIN") {
-            const emailDomainMapping = await BusinessUnitEmailMapping_1.BusinessUnitEmailMapping.findOne({ businessUnit });
+        if (adminBU && adminBU !== "SUPERADMIN") {
+            const emailDomainMapping = await BusinessUnitEmailMapping_1.BusinessUnitEmailMapping.findOne({ businessUnit: adminBU });
             if (emailDomainMapping) {
                 const emailDomain = email.toLowerCase().split('@')[1];
                 const expectedDomain = emailDomainMapping.emailDomain.toLowerCase();
                 if (!emailDomain || emailDomain !== expectedDomain) {
                     return res.status(400).json({
-                        error: `Invalid email domain for ${businessUnit}. Your email must end with @${expectedDomain}`
+                        error: `Invalid email domain for ${adminBU}. Your email must end with @${expectedDomain}`
                     });
                 }
             }
@@ -68,7 +80,7 @@ exports.adminAuthRouter.post("/register", async (req, res) => {
                 const anyMappingExists = await BusinessUnitEmailMapping_1.BusinessUnitEmailMapping.countDocuments();
                 if (anyMappingExists > 0) {
                     return res.status(400).json({
-                        error: `Email domain mapping not configured for ${businessUnit}. Please contact your administrator to set up the email domain for this business unit.`
+                        error: `Email domain mapping not configured for ${adminBU}. Please contact your administrator to set up the email domain for this business unit.`
                     });
                 }
             }
